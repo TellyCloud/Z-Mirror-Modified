@@ -5,7 +5,7 @@ from signal import SIGINT, signal
 from sys import executable
 from time import time, monotonic
 from uuid import uuid4
-
+import asyncio
 from aiofiles import open as aiopen
 from aiofiles.os import path as aiopath
 from aiofiles.os import remove as aioremove
@@ -31,6 +31,9 @@ from .modules import (anonymous, authorize, bot_settings, cancel_mirror,
 
 
 async def start(_, message):
+    sticker_message = await message.reply_sticker("CAACAgIAAxkBAAEXyPRledQ6luKt1QABSPMPi2s4rgH3xMUAAmkdAALpI4hJ8xCGgSybQv8zBA")
+    await asyncio.sleep(2)
+    await sticker_message.delete()
     if len(message.command) > 1 and len(message.command[1]) == 36:
         userid = message.from_user.id
         input_token = message.command[1]
@@ -58,11 +61,13 @@ async def start(_, message):
     elif config_dict['DM_MODE'] and message.chat.type != message.chat.type.SUPERGROUP:
         start_string = 'Bot Started.\n' \
                        'Now I will send all of your stuffs here.\n' \
-                       'Use me at: @Z_Mirror'
+                       'Use me at: @TELLYCLOUD_BOTS \n' \
+                       'Repo: @Z_Mirror'
     elif not config_dict['DM_MODE'] and message.chat.type != message.chat.type.SUPERGROUP:
         start_string = 'Sorry, you cannot use me here!\n' \
-                       'Join: @Z_Mirror to use me.\n' \
-                       'Thank You'
+                       'Join: @TELLYCLOUD_BOTS to use me.\n' \
+                       'Thank You' \
+                       'Repo: @Z_Mirror'
     else:
         tag = message.from_user.mention
         start_string = 'Start me in DM, not in the group.\n' \
@@ -71,6 +76,9 @@ async def start(_, message):
 
 
 async def restart(_, message):
+    sticker_message = await message.reply_sticker("CAACAgUAAxkBAAEXrSRlbwYlArKGw0lVGUGHquKMqbu3fQACLggAAmCIwVXm28BgWp1jmzME")
+    await asyncio.sleep(2)
+    await sticker_message.delete()
     restart_message = await sendMessage(message, "Restarting...")
     if scheduler.running:
         scheduler.shutdown(wait=False)
@@ -226,7 +234,7 @@ async def main():
     bot.add_handler(MessageHandler(restart, filters=command(BotCommands.RestartCommand) & CustomFilters.sudo))
     bot.add_handler(MessageHandler(ping,    filters=command(BotCommands.PingCommand)    & CustomFilters.authorized))
     bot.add_handler(MessageHandler(bot_help,filters=command(BotCommands.HelpCommand)    & CustomFilters.authorized))
-    LOGGER.info("Bot Started Successfully!")
+    LOGGER.info("🚀️ TELLY Bot Started Successfully!")
     signal(SIGINT, exit_clean_up)
 
 bot.loop.run_until_complete(main())
