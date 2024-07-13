@@ -19,7 +19,7 @@ aria2 = ariaAPI(ariaClient(host="http://localhost", port=6800, secret=""))
 
 LOGGER = getLogger(__name__)
 
-rawowners = "<h1 style='text-align: center'>See my Channel <a href='https://telegram.me/z_mirror'>@Telegram</a><br><br>By<br><br><a href='https://github.com/Dawn-India/Z-Mirror'>Z-Mirror</a></h1>"
+rawowners = "<h1 style='text-align: center'>See my Channel <a href='https://telegram.me/TELLYCLOUD_BOTS'>@Telegram</a><br><br>By<br><br><a href='https://github.com/TELLYCLOUD'>TELLYCLOUD_BOTS</a></h1>"
 
 pin_entry = '''
     <section>
@@ -84,8 +84,8 @@ rawindexpage = '''
         </div>
         <h2 class="name">Qbittorrent Selection</h2>
         <div class="social">
-            <a href="https://www.github.com/Dawn-India/Z-Mirror"><i class="fab fa-github"></i></a>
-            <a href="https://telegram.me/Z_Mirror"><i class="fab fa-telegram"></i></a>
+            <a href="https://www.telegram.me/TELLYCLOUD_BOTS"><i class="fab fa-telegram-group"></i></a>
+            <a href="https://telegram.me/TELLYCLOUD_BOTS"><i class="fab fa-telegram"></i></a>
         </div>
     </header>
     <!-- pin_entry -->
