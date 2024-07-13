@@ -115,10 +115,9 @@ def get_progress_bar_string(pct):
         pct = float(pct.strip('%'))
     p = min(max(pct, 0), 100)
     cFull = int(p // 10)
-    p_str = '█' * cFull
-    p_str += '▒' * (10 - cFull)
+    p_str = '★' * cFull
+    p_str += '✩' * (10 - cFull)
     return f"{p_str}"
-
 
 def get_readable_message():
     msg = f'<a href="https://t.me/TELLYCLOUD_Bots"><b>❖𝐓𝐄𝐋𝐋𝐘𝐂𝐋𝐎𝐔𝐃 𝐁𝐎𝐓𝐒™❖</b></a>'
@@ -201,7 +200,7 @@ def get_readable_message():
     msg += f"\n╰⦿  <code> 🅄🅻   </code>:{get_readable_file_size(up_speed)}/s"
     if tasks <= STATUS_LIMIT:
         buttons = ButtonMaker()
-        buttons.ibutton("BOT INFO", "status stats")
+        buttons.ibutton("TELLY BOT INFO", "status stats")
         button = buttons.build_menu(1)
     if tasks > STATUS_LIMIT:
         return get_pages(msg)
