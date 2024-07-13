@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from pyrogram.filters import command
 from pyrogram.handlers import MessageHandler
-
+import asyncio
 from bot import DATABASE_URL, bot, user_data
 from bot.helper.ext_utils.bot_utils import update_user_ldata
 from bot.helper.ext_utils.db_handler import DbManager
@@ -11,6 +11,9 @@ from bot.helper.telegram_helper.message_utils import sendMessage
 
 
 async def authorize(_, message):
+    sticker_message = await message.reply_sticker("CAACAgUAAxkBAAEZAudl86trytcEPXnGRbzw84OoSAqQwgACQgkAAo6nuVSdzxsdR3ZptjQE")
+    await asyncio.sleep(2)
+    await sticker_message.delete()
     msg = message.text.split()
     if len(msg) > 1:
         id_ = int(msg[1].strip())
