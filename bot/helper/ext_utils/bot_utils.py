@@ -194,10 +194,10 @@ def get_readable_message():
             up_speed += speed_in_bytes_per_second
     msg += "➖➖➖➖➖➖➖➖➖➖➖➖"
     msg += f"\n╭⦿  ❰ TELLY BOTS STATUS ❱" 
-    msg += f"\n│᚜⦿ <code> FREE  </code>:{get_readable_file_size(disk_usage(config_dict['DOWNLOAD_DIR']).free)}"
-    msg += f"\n│᚜⦿ <code> UPTM  </code>:{get_readable_time(time() - botStartTime)}"
-    msg += f"\n│᚜⦿ <code> 🄳🅻   </code>:{get_readable_file_size(dl_speed)}/s"
-    msg += f"\n╰⦿  <code> 🅄🅻   </code>:{get_readable_file_size(up_speed)}/s"
+    msg += f"\n│᚜⦿<code>FREE  </code>:{get_readable_file_size(disk_usage(config_dict['DOWNLOAD_DIR']).free)}"
+    msg += f"\n│᚜⦿<code>UPTM  </code>:{get_readable_time(time() - botStartTime)}"
+    msg += f"\n│᚜⦿<code>🄳🅻   </code>:{get_readable_file_size(dl_speed)}/s"
+    msg += f"\n╰⦿<code> 🅄🅻   </code>:{get_readable_file_size(up_speed)}/s"
     if tasks <= STATUS_LIMIT:
         buttons = ButtonMaker()
         buttons.ibutton("TELLY BOT INFO", "status stats")
