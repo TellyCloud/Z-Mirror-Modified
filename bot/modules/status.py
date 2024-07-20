@@ -29,10 +29,10 @@ async def mirror_status(_, message):
     if count == 0:
         currentTime = get_readable_time(time() - botStartTime)
         free = get_readable_file_size(disk_usage(config_dict['DOWNLOAD_DIR']).free)
-        msg = '<b>Uninstall Telegram and enjoy your life!</b>'
-        msg += '\n\nNo Active Tasks!\n___________________________'
+        msg = '<b><blockquote>◥꧁ད 𝐔𝐧𝐢𝐧𝐬𝐭𝐚𝐥𝐥 𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦! 𝐚𝐧𝐝 𝐄𝐧𝐣𝐨𝐲 𝐟𝐨𝐫 𝐋𝐢𝐟𝐞!! ཌ꧂◤</blockquote></b>'
+        msg += '\n\n<blockquote>No Active Tasks!\n___________________________'
         msg += f"\n<b>CPU</b>: {cpu_percent()}% | <b>FREE</b>: {free}" \
-               f"\n<b>RAM</b>: {virtual_memory().percent}% | <b>UPTIME</b>: {currentTime}"
+               f"\n<b>RAM</b>: {virtual_memory().percent}% | <b>UPTIME</b>: {currentTime}</blockquote>"
         reply_message = await sendMessage(message, msg)
         await auto_delete_message(message, reply_message)
     else:
