@@ -138,12 +138,12 @@ def get_readable_message():
         if config_dict['DELETE_LINKS'] and int(config_dict['AUTO_DELETE_MESSAGE_DURATION']) > 0:
             msg += f"\n<b>📁 File Name</b> » <i>{escape(f'{download.name()}')}</i>\n\n" if elapsed <= config_dict['AUTO_DELETE_MESSAGE_DURATION'] else ""
         else:
-            msg += f"\n<b>📁 File Name</b> » <i>{escape(f'{download.name()}')}</i>\n\n"
+            msg += f"\n<b>📁 File Name</b> »<i>{escape(f'{download.name()}')}</i>\n\n"
         msg += f"╭⦿   <b>{download.status()}</b>"
         if download.status() not in [MirrorStatus.STATUS_SEEDING, MirrorStatus.STATUS_PAUSED,
                                      MirrorStatus.STATUS_QUEUEDL, MirrorStatus.STATUS_QUEUEUP]:
             msg += f" <b>» {download.speed()}</b>"
-            msg += f"\n│᚜⦿ {get_progress_bar_string(download.progress())} » {download.progress()}"
+            msg += f"\n│᚜⦿{get_progress_bar_string(download.progress())} »{download.progress()}"
             msg += f"\n│᚜⦿  <code>Done </code>: {download.processed_bytes()} of {download.size()}"
             msg += f"\n│᚜⦿  <code>ETA  </code>: {download.eta()}"
             msg += f"\n│᚜⦿  <code>Past </code>: {get_readable_time(elapsed)}"
