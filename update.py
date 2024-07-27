@@ -114,7 +114,7 @@ UPSTREAM_REPO = environ.get(
     ""
 )
 if len(UPSTREAM_REPO) == 0:
-    UPSTREAM_REPO = "https://gitlab.com/Dawn-India/Z-Mirror"
+    UPSTREAM_REPO = "https://github.com/TellyCloud/Z-Mirror-Modified"
 
 UPSTREAM_BRANCH = environ.get(
     "UPSTREAM_BRANCH",
@@ -148,7 +148,7 @@ if UPSTREAM_REPO is not None:
     log_info("Fetching latest updates...")
     if update.returncode == 0:
         log_info("Successfully updated...")
-        log_info("Thanks For Using @Z_Mirror")
+        log_info("Thanks For Using @TellYCloud_bots")
     else:
         log_error("Error while getting latest updates.")
         log_error("Check if entered UPSTREAM_REPO is valid or not!")
