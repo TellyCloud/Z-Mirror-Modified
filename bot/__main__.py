@@ -218,7 +218,7 @@ async def restart_notification():
 
     async def send_incomplete_task_message(cid, msg):
         try:
-            if msg.startswith(" <blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED SUCCESSFULLY  ░▒▓█▇▅▃▂</blockquote>"):
+            if msg.startswith(" <blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED ░▒▓█▇▅▃▂</blockquote>"):
                 await bot.edit_message_text( # type: ignore
                     chat_id=chat_id,
                     message_id=msg_id,
@@ -239,7 +239,7 @@ async def restart_notification():
         if notifier_dict := await DbManager().get_incomplete_tasks():
             for cid, data in notifier_dict.items():
                 msg = (
-                    "<blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED SUCCESSFULLY  ░▒▓█▇▅▃▂</blockquote>"
+                    "<blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED ░▒▓█▇▅▃▂</blockquote>"
                     if cid == chat_id
                     else "Bot Restarted!"
                 )
@@ -269,7 +269,7 @@ async def restart_notification():
             await bot.edit_message_text( # type: ignore
                 chat_id=chat_id,
                 message_id=msg_id,
-                text=" <blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED SUCCESSFULLY  ░▒▓█▇▅▃▂</blockquote>"
+                text=" <blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED ░▒▓█▇▅▃▂</blockquote>"
             )
         except:
             pass
@@ -325,7 +325,7 @@ async def main():
             ) & CustomFilters.authorized,
         )
     )
-    LOGGER.info(" <blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED SUCCESSFULLY  ░▒▓█▇▅▃▂</blockquote>")
+    LOGGER.info(" <blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED ░▒▓█▇▅▃▂</blockquote>")
     signal(
         SIGINT,
         exit_clean_up
