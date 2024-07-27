@@ -83,12 +83,12 @@ class TelegraphHelper:
                     nxt_page += 1
             await self.edit_page(
                 path=path[prev_page],
-                title="@Z_Mirror Torrent Search",
+                title="@TellYcloud_Bots Torrent Search",
                 content=content,
             )
         return
 
 
 telegraph = TelegraphHelper(
-    "@Z_Mirror", "https://github.com/Dawn-India/Z-Mirror"
+    "@TellYcloud_Bots", "https://github.com/TellyCloud/Z-Mirror-Modified"
 )
