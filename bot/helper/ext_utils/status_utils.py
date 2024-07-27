@@ -263,15 +263,15 @@ async def get_readable_message(
             )
             msg += (
                 f"\n 「 {get_progress_bar_string(progress)} 」 » <b><i>{progress}</i></b>"
-                f"\n<code>٭ Status :</code> <b>{tstatus}</b>"
-                f"\n<code>٭ Done   :</code> {task.processed_bytes()} of {task.size()}"
-                f"\n<code>٭ Speed  :</code> {task.speed()}"
-                f"\n<code>٭ ETA    :</code> {task.eta()}"
-                f"\n<code>٭ Past   :</code> {elapsed}"
-                f"\n<code>٭ User   :</code> <b>{user_tag}</b>"
-                f"\n<code>٭ UserID :</code> ||{task.listener.userId}||"
-                f"\n<code>٭ Upload :</code> {task.listener.mode}"
-                f"\n<code>٭ Engine :</code> <b><i>{task.engine}</i></b>"
+                f"\n<code>• Status :</code> <b>{tstatus}</b>"
+                f"\n<code>• Done   :</code> {task.processed_bytes()} of {task.size()}"
+                f"\n<code>• Speed  :</code> {task.speed()}"
+                f"\n<code>• ETA    :</code> {task.eta()}"
+                f"\n<code>• Past   :</code> {elapsed}"
+                f"\n<code>• User   :</code> <b>{user_tag}</b>"
+                f"\n<code>• UserID :</code> ||{task.listener.userId}||"
+                f"\n<code>• Upload :</code> {task.listener.mode}"
+                f"\n<code>• Engine :</code> <b><i>{task.engine}</i></b>"
             )
             if hasattr(
                 task,
@@ -279,7 +279,7 @@ async def get_readable_message(
             ):
                 try:
                     if playlist := task.playList():
-                        msg += f"\n<code>٭ YtList :</code> {playlist}"
+                        msg += f"\n<code>• YtList :</code> {playlist}"
                 except:
                     pass
             if hasattr(
@@ -287,24 +287,24 @@ async def get_readable_message(
                 "seeders_num"
             ):
                 try:
-                    msg += f"\n<code>٭ S/L    :</code> {task.seeders_num()}/{task.leechers_num()}"
+                    msg += f"\n<code>• S/L    :</code> {task.seeders_num()}/{task.leechers_num()}"
                 except:
                     pass
         elif tstatus == MirrorStatus.STATUS_SEEDING:
             msg += (
-                f"\n<code>٭ Size   : </code>{task.size()}"
-                f"\n<code>٭ Speed  : </code>{task.seed_speed()}"
-                f"\n<code>٭ Upload : </code>{task.uploaded_bytes()}"
-                f"\n<code>٭ Ratio  : </code>{task.ratio()}"
-                f"\n<code>٭ Time   : </code>{task.seeding_time()}"
+                f"\n<code>• Size   : </code>{task.size()}"
+                f"\n<code>• Speed  : </code>{task.seed_speed()}"
+                f"\n<code>• Upload : </code>{task.uploaded_bytes()}"
+                f"\n<code>• Ratio  : </code>{task.ratio()}"
+                f"\n<code>• Time   : </code>{task.seeding_time()}"
             )
         else:
             msg += (
-                f"\n<code>٭ Size   :</code> {task.size()}"
-                f"\n<code>٭ Upload :</code> {task.listener.mode}"
-                f"\n<code>٭ Past   :</code> {elapsed}"
-                f"\n<code>٭ User   :</code> {user_tag}"
-                f"\n<code>٭ Engine :</code> {task.engine}"
+                f"\n<code>• Size   :</code> {task.size()}"
+                f"\n<code>• Upload :</code> {task.listener.mode}"
+                f"\n<code>• Past   :</code> {elapsed}"
+                f"\n<code>• User   :</code> {user_tag}"
+                f"\n<code>• Engine :</code> {task.engine}"
             )
         msg += f"\n<blockquote>⚠️ {cancel_task}</blockquote>\n\n"
 
