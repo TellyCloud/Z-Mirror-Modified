@@ -114,14 +114,14 @@ async def start(client, message):
     ):
         start_string = "Bot Started.\n" \
                        "Now I will send all of your stuffs here.\n" \
-                       "Use me at: @Z_Mirror"
+                       "Use me at: @TellYcloud_Bots"
     elif (
         not config_dict["DM_MODE"]
         and message.chat.type != message.chat.type.SUPERGROUP
         and not await CustomFilters.authorized(client, message)
     ):
         start_string = "Sorry, you cannot use me here!\n" \
-                       "Join: @Z_Mirror to use me.\n" \
+                       "Join: @TellYcloud_Bots to use me.\n" \
                        "Thank You!"
     elif (
         not config_dict["DM_MODE"]
