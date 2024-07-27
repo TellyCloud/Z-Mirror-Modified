@@ -242,14 +242,14 @@ async def get_readable_message(
             and int(config_dict["AUTO_DELETE_MESSAGE_DURATION"]) > 0
         ):
             msg += (
-                f"```\n#Zee{index + start_position}: "
+                f"```\n#TellY{index + start_position}: "
                 f"{escape(f"{task.name()}")}\n```"
                 if elapse <= config_dict["AUTO_DELETE_MESSAGE_DURATION"]
-                else f"\n<blockquote>#Zee{index + start_position}...(Processing)</blockquote>"
+                else f"\n<blockquote>#TellY{index + start_position}...(Processing)</blockquote>"
             )
         else:
             msg += (
-                f"```\n#Zee{index + start_position}: "
+                f"```\n#TellY{index + start_position}: "
                 f"{escape(f"{task.name()}")}\n```"
             )
         if tstatus not in [
@@ -262,7 +262,7 @@ async def get_readable_message(
                 else task.progress()
             )
             msg += (
-                f"\n{get_progress_bar_string(progress)} » <b><i>{progress}</i></b>"
+                f"\n[{get_progress_bar_string(progress)}] » <b><i>{progress}</i></b>"
                 f"\n<code>Status :</code> <b>{tstatus}</b>"
                 f"\n<code>Done   :</code> {task.processed_bytes()} of {task.size()}"
                 f"\n<code>Speed  :</code> {task.speed()}"
