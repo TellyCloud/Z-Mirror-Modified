@@ -262,7 +262,7 @@ async def get_readable_message(
                 else task.progress()
             )
             msg += (
-                f"\n 「 {get_progress_bar_string(progress)} 」 » <b><i>{progress}</i></b>"
+                f"\n <b>「 {get_progress_bar_string(progress)} 」</b> » <b><i>{progress}</i></b>"
                 f"\n<code>• Status :</code> <b>{tstatus}</b>"
                 f"\n<code>• Done   :</code> {task.processed_bytes()} of {task.size()}"
                 f"\n<code>• Speed  :</code> {task.speed()}"
