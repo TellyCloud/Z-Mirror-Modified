@@ -180,9 +180,9 @@ def get_progress_bar_string(pct):
         max(pct, 0),
         100
     )
-    cFull = int(p // 15)
+    cFull = int(p // 10)
     p_str = "⬥" * cFull
-    p_str += "⬦" * (15 - cFull)
+    p_str += "⬦" * (10 - cFull)
     return f"{p_str}"
 
 
@@ -242,7 +242,7 @@ async def get_readable_message(
             and int(config_dict["AUTO_DELETE_MESSAGE_DURATION"]) > 0
         ):
             msg += (
-                f"```\n#TellY{index + start_position}: "
+                f"```#TellY{index + start_position}: "
                 f"{escape(f"{task.name()}")}\n```"
                 if elapse <= config_dict["AUTO_DELETE_MESSAGE_DURATION"]
                 else f"<blockquote>#TellY{index + start_position}...(Processing)</blockquote>"
@@ -312,7 +312,7 @@ async def get_readable_message(
         if status == "All":
             return None, None
         else:
-            msg = f"<blockquote>No Active {status} Tasks!\n\n"
+            msg = f"No Active {status} Tasks!\n\n"
     buttons = ButtonMaker()
     if not is_user:
         buttons.ibutton(
@@ -367,7 +367,7 @@ async def get_readable_message(
     )
     button = buttons.build_menu(8)
     msg += (
-        f"<b>CPU</b>: {cpu_percent()}% | "
+        f"<b><blockquote>CPU</b>: {cpu_percent()}% | "
         f"<b>FREE</b>: {get_readable_file_size(disk_usage(DOWNLOAD_DIR).free)}\n"
         f"<b>RAM</b>: {virtual_memory().percent}% | "
         f"<b>UPTM</b>: {get_readable_time(time() - botStartTime)}</blockquote>"
