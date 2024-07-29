@@ -675,9 +675,9 @@ class TaskListener(TaskConfig):
             count = len(task_dict)
             self.removeFromSameDir()
         msg = f"Sorry {self.tag}!\nYour download has been stopped."
-        msg += f"\n\n<code>Reason </code>: {escape(str(error))}"
+        msg += f"\n\n<blockquote><code>Reason </code>: {escape(str(error))}"
         msg += f"\n<code>Past   </code>: {get_readable_time(time() - self.time)}"
-        msg += f"\n<code>Mode   </code>: {self.mode}"
+        msg += f"\n<code>Mode   </code>: {self.mode}</blockquote>"
         tlmsg = await sendMessage(
             self.message, # type: ignore
             msg,
@@ -748,9 +748,9 @@ class TaskListener(TaskConfig):
                 del task_dict[self.mid]
             count = len(task_dict)
         msg = f"Sorry {self.tag}!\nYour upload has been stopped."
-        msg += f"\n\n<code>Reason </code>: {escape(str(error))}"
+        msg += f"\n\n<blockquote><code>Reason </code>: {escape(str(error))}"
         msg += f"\n<code>Past   </code>: {get_readable_time(time() - self.time)}"
-        msg += f"\n<code>Mode   </code>: {self.mode}"
+        msg += f"\n<code>Mode   </code>: {self.mode}</blockquote>"
         tlmsg = await sendMessage(
             self.message, # type: ignore
             msg
