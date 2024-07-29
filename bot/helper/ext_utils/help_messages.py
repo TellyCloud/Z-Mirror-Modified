@@ -10,7 +10,7 @@ mirror = """
 <b>NOTE:</b>
 1. Commands that start with <b>qb</b> are ONLY for torrents.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 yt = """
@@ -25,7 +25,7 @@ yt = """
 Check all supported <a href='https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md'>SITES</a>
 Check all yt-dlp API options from this <a href='https://github.com/yt-dlp/yt-dlp/blob/master/yt_dlp/YoutubeDL.py#L184'>FILE</a> or use this <a href='https://t.me/mltb_official_channel/177'>script</a> to convert CLI arguments to API options.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 clone = """
@@ -35,7 +35,7 @@ Use -sync to use sync method in rclone.
 
 Example: /cmd rcl/rclone_path -up rcl/rclone_path/rc -sync
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 new_name = """
@@ -44,7 +44,7 @@ new_name = """
 /cmd link -n new name
 Note: Doesn't work with torrents
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 multi_link = """
@@ -52,7 +52,7 @@ multi_link = """
 
 /cmd -i 10(number of links/files)
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 same_dir = """
@@ -61,7 +61,7 @@ same_dir = """
 /cmd -i 10(number of links/files) -m folder name (multi message)
 /cmd -b -m folder name (bulk-message/file)
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 thumb = """
@@ -69,7 +69,7 @@ thumb = """
 
 /cmd link -t tg-message-link(doc or photo)
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 split_size = """
@@ -78,7 +78,7 @@ split_size = """
 /cmd link -sp (500mb or 2gb or 4000000000)
 Note: Only mb and gb are supported or write in bytes without unit!
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 upload = """
@@ -95,7 +95,7 @@ If you want to add path or gdrive manually from your config/token (uploaded from
 In case you want to specify whether using token.pickle or service accounts you can add tp:gdrive_id or sa:gdrive_id or mtp:gdrive_id.
 DEFAULT_UPLOAD has no effect on leech cmds.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 user_download = """
@@ -108,7 +108,7 @@ user_download = """
 /cmd mtp:gdrive_id or mtp:link to download using user token.pickle uploaded from usetting
 /cmd mrcc:remote:path to download using user rclone config uploaded from usetting
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 rcf = """
@@ -118,7 +118,7 @@ rcf = """
 This will override all other flags except --exclude.
 Check here all <a href='https://rclone.org/flags/'>RcloneFlags</a>.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 bulk = """
@@ -134,7 +134,7 @@ Reply to this example by this cmd -> /cmd -b(bulk) or /cmd -b -m folder name
 You can set the start and end of the links from the bulk like seed, with -b start:end or only end by -b :end or only start by -b start.
 The default start is from zero(first link) to infinity.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 rlone_dl = """
@@ -146,7 +146,7 @@ Users can add their own rclone from user settings
 If you want to add a path manually from your config add mrcc: before the path without space
 /cmd mrcc:main:dump/ubuntu.iso
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 extract_zip = """
@@ -157,7 +157,7 @@ extract_zip = """
 /cmd link -z password -e (extract and zip password protected)
 Note: When both extract and zip are added with cmd, it will extract first and then zip, so always extract first.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 join = """
@@ -170,7 +170,7 @@ By Reply:
 If you have a link(folder) that has split files:
 /cmd link -j
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 tg_links = """
@@ -186,7 +186,7 @@ Range: https://t.me/channel_name/first_message_id-last_message_id
 Range Example: tg://openmessage?user_id=xxxxxx&message_id=555-560 or https://t.me/channel_name/100-150
 Note: Range link will work only by replying cmd to it.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 sample_video = """
@@ -196,7 +196,7 @@ Create a sample video for one video or a folder of videos.
 /cmd -sv (it will take the default values which are 60sec sample duration and part duration is 4sec).
 You can control those values. Example: /cmd -sv 70:5(sample-duration:part-duration) or /cmd -sv :5 or /cmd -sv 70.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 screenshot = """
@@ -206,7 +206,7 @@ Create up to 10 screenshots for one video or a folder of videos.
 /cmd -ss (it will take the default values which are 10 photos).
 You can control this value. Example: /cmd -ss 6.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 seed = """
@@ -216,7 +216,7 @@ seed = """
 To specify ratio and seed time add -d ratio:time.
 Example: -d 0.7:10 (ratio and time) or -d 0.7 (only ratio) or -d :10 (only time) where time is in minutes.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 zip_arg = """
@@ -225,7 +225,7 @@ zip_arg = """
 /cmd link -z (zip)
 /cmd link -z password (zip password protected)
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 qual = """
@@ -234,7 +234,7 @@ qual = """
 In case default quality is added from yt-dlp options using format option and you need to select quality for specific link or links with multi links feature.
 /cmd link -s
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 yt_opt = """
@@ -245,7 +245,7 @@ Note: Add `^` before integer or float, some values must be numeric and some stri
 Like playlist_items:10 works with string, so no need to add `^` before the number but playlistend works only with integer so you must add `^` before the number like example above.
 You can add tuple and dict also. Use double quotes inside dict.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 convert_media = """
@@ -256,7 +256,7 @@ convert_media = """
 /cmd link -ca mp3 + flac ogg (convert only flac and ogg audios to mp3)
 /cmd link -cv mp4 - webm flv (convert all videos to mp4 except webm and flv)
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 force_start = """
@@ -265,7 +265,7 @@ force_start = """
 /cmd link -fd (force download only)
 /cmd link -fu (force upload directly after download finishes)
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 gdrive = """
@@ -276,7 +276,7 @@ If DEFAULT_UPLOAD is `rc` then you can pass up: `gd` to upload using gdrive tool
 /cmd sa:gdriveLink or sa:gdriveId -p sa:gdriveId or gdl or gd (to use service account if service account disabled)
 /cmd mtp:gdriveLink or mtp:gdriveId -up mtp:gdriveId or gdl or gd(if you have added upload gdriveId from usetting) (to use user token.pickle that uploaded by usetting)
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 rclone_cl = """
@@ -286,7 +286,7 @@ If DEFAULT_UPLOAD is `gd` then you can pass up: `rc` to upload to RCLONE_PATH.
 /cmd rcl or rclonePath -up rclonePath or rc or rcl
 /cmd mrcc:rclonePath -up rcl or rc(if you have added rclone path from usetting) (to use user config)
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 name_sub = """
@@ -297,14 +297,14 @@ This will affect all files. Format: wordToReplace : wordToReplaceWith : sensitiv
 2. ACC will get removed because I have added nothing between to replace with sensitive case because I have added `s` last of the option.
 3. mP4 will get removed because I have added nothing to replace with
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 mixed_leech = """
 <b>Mixed Leech</b>: -ml
 /cmd link -ml (leech by user and bot session with respect to size)
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 YT_HELP_DICT = {
@@ -386,7 +386,7 @@ Filter Notes:
 4. Take a look at the title if it has a static special character after or before the qualities or extensions or whatever and use them in the filter to avoid wrong match.
 Timeout: 60 sec.
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
 
 PASSWORD_ERROR_MESSAGE = """
@@ -395,5 +395,5 @@ PASSWORD_ERROR_MESSAGE = """
 
 <b>Example:</b> link::my password
 
-<b>Join: @TELLYCLOUD_BOTSr</b>
+<b>Join: @TELLYCLOUD_BOTS</b>
 """
