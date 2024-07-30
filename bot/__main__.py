@@ -218,7 +218,7 @@ async def restart_notification():
 
     async def send_incomplete_task_message(cid, msg):
         try:
-            if msg.startswith(" <blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED ░▒▓█▇▅▃▂</blockquote>"):
+            if msg.startswith("Restarted Successfully!"):
                 await bot.edit_message_text( # type: ignore
                     chat_id=chat_id,
                     message_id=msg_id,
@@ -239,7 +239,7 @@ async def restart_notification():
         if notifier_dict := await DbManager().get_incomplete_tasks():
             for cid, data in notifier_dict.items():
                 msg = (
-                    "<blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED ░▒▓█▇▅▃▂</blockquote>"
+                    "Restarted Successfully!"
                     if cid == chat_id
                     else "Bot Restarted!"
                 )
@@ -269,7 +269,7 @@ async def restart_notification():
             await bot.edit_message_text( # type: ignore
                 chat_id=chat_id,
                 message_id=msg_id,
-                text=" <blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED ░▒▓█▇▅▃▂</blockquote>"
+                text="Restarted Successfully!"
             )
         except:
             pass
@@ -314,7 +314,7 @@ async def main():
             ping,
             filters=command(
                 BotCommands.PingCommand
-            ) & CustomFilters.authorized
+            ) & CustomFilters.sudo
         )
     )
     bot.add_handler( # type: ignore
@@ -325,7 +325,7 @@ async def main():
             ) & CustomFilters.authorized,
         )
     )
-    LOGGER.info(" <blockquote> ▂▃▅▇█▓▒░ BOT RESTARTED ░▒▓█▇▅▃▂</blockquote>")
+    LOGGER.info("Bot Started Successfully!")
     signal(
         SIGINT,
         exit_clean_up
