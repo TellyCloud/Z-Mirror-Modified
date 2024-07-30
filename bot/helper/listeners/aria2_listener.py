@@ -25,7 +25,8 @@ from bot.helper.ext_utils.status_utils import (
 )
 from bot.helper.ext_utils.task_manager import (
     limit_checker,
-    stop_duplicate_check
+    stop_duplicate_check,
+    check_avg_speed
 )
 from bot.helper.task_utils.status_utils.aria2_status import Aria2Status
 from bot.helper.telegram_helper.message_utils import (
@@ -61,7 +62,7 @@ async def _onDownloadStarted(api, gid):
                     if download.is_removed or download.followed_by_ids:
                         await deleteMessage(meta)
                         break
-                    download = download.live
+                    await sync_to_async(download.update)
         return
     else:
         LOGGER.info(f"onAria2DownloadStarted: {download.name} - Gid: {gid}")
@@ -73,7 +74,7 @@ async def _onDownloadStarted(api, gid):
             gid
         )
         await sleep(2)
-        download = download.live
+        await sync_to_async(download.update)
         task.listener.name = download.name
         task.listener.isTorrent = download.is_torrent
         msg, button = await stop_duplicate_check(task.listener)
@@ -97,13 +98,13 @@ async def _onDownloadStarted(api, gid):
                     api.get_download,
                     gid
                 )
-                download = download.live
+                await sync_to_async(download.update)
                 if download.followed_by_ids:
                     download = await sync_to_async(
                         api.get_download,
                         download.followed_by_ids[0]
                     )
-                    download = download.live
+                    await sync_to_async(download.update)
                 if download.total_length > 0:
                     break
         task.listener.size = download.total_length
@@ -121,6 +122,35 @@ async def _onDownloadStarted(api, gid):
                 await auto_delete_message(
                     task.listener.message,
                     amsg
+                )
+        if config_dict["AVG_SPEED"]:
+            start_time = time()
+            total_speed = 0
+            count = 0
+            while time() - start_time < 600:
+                await sync_to_async(download.update)
+                dl_speed = download.download_speed
+                total_speed += dl_speed
+                count += 1
+                await sleep(10)
+            if min_speed := await check_avg_speed(
+                total_speed,
+                count
+            ):
+                LOGGER.info(
+                    f"Task is slower than minimum download speed: {task.listener.name} | {get_readable_file_size(dl_speed)}ps"
+                )
+                smsg = await task.listener.onDownloadError(min_speed)
+                await sync_to_async(
+                    api.remove,
+                    [download],
+                    force=True,
+                    files=True
+                )
+                await delete_links(task.listener.message)
+                await auto_delete_message(
+                    task.listener.message,
+                    smsg
                 )
 
 
@@ -232,10 +262,10 @@ async def _onBtDownloadComplete(api, gid):
         await task.listener.onDownloadComplete()
         if Intervals["stopAll"]:
             return
-        download = download.live
+        await sync_to_async(download.update)
         if task.listener.seed:
             if download.is_complete:
-                if task := await getTaskByGid(gid):
+                if await getTaskByGid(gid):
                     LOGGER.info(f"Cancelling Seed: {download.name}")
                     await task.listener.onUploadError(
                         f"Seeding stopped with Ratio: {task.ratio()} and Time: {task.seeding_time()}"
