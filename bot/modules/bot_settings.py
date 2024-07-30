@@ -331,7 +331,10 @@ Timeout: 60 sec.
 
 
 async def update_buttons(message, key=None, edit_type=None):
-    msg, button = await get_buttons(
+    (
+        msg,
+        button
+    ) = await get_buttons(
         key,
         edit_type
     )
@@ -437,7 +440,8 @@ async def edit_variable(client, message, pre_message, key):
         "PLAYLIST_LIMIT"
     ] and key.endswith((
         "_THRESHOLD",
-        "_LIMIT"
+        "_LIMIT",
+        "_SPEED"
     )):
         value = float(value)
     elif value.isdigit() and key != "FSUB_IDS":
@@ -1046,13 +1050,17 @@ async def edit_bot_settings(client, query):
             return
         elif value and data[2] not in [
             "SEARCH_LIMIT",
-            "STATUS_LIMIT"
+            "STATUS_LIMIT",
+            "PLAYLIST_LIMIT"
         ] and data[2].endswith((
             "_THRESHOLD",
             "_LIMIT"
         )):
             value = float(value)
             value = get_readable_file_size(value * 1024**3)
+        elif value and data[2] == "AVG_SPEED":
+            value = float(value)
+            value = get_readable_file_size(value * 1024**2)
         elif value == "":
             value = None
         await query.answer(
@@ -1357,6 +1365,20 @@ async def load_config():
     if len(LEECH_FILENAME_PREFIX) == 0:
         LEECH_FILENAME_PREFIX = ""
 
+    LEECH_FILENAME_SUFFIX = environ.get(
+        "LEECH_FILENAME_SUFFIX",
+        ""
+    )
+    if len(LEECH_FILENAME_SUFFIX) == 0:
+        LEECH_FILENAME_SUFFIX = ""
+
+    LEECH_CAPTION_FONT = environ.get(
+        "LEECH_CAPTION_FONT",
+        ""
+    )
+    if len(LEECH_CAPTION_FONT) == 0:
+        LEECH_CAPTION_FONT = ""
+
     SEARCH_PLUGINS = environ.get(
         "SEARCH_PLUGINS",
         ""
@@ -1400,7 +1422,10 @@ async def load_config():
         len(task_dict) != 0
         and (st := Intervals["status"])
     ):
-        for key, intvl in list(st.items()):
+        for (
+            key,
+            intvl
+        ) in list(st.items()):
             intvl.cancel()
             Intervals["status"][key] = setInterval(
                 STATUS_UPDATE_INTERVAL,
@@ -1921,6 +1946,16 @@ async def load_config():
         else float(LEECH_LIMIT)
     )
 
+    AVG_SPEED = environ.get(
+        "AVG_SPEED",
+        ""
+    )
+    AVG_SPEED = (
+        ""
+        if len(AVG_SPEED) == 0
+        else float(AVG_SPEED)
+    )
+
     SET_COMMANDS = environ.get(
         "SET_COMMANDS",
         ""
@@ -2004,6 +2039,7 @@ async def load_config():
     config_dict.update(
         {
             "AUTO_DELETE_MESSAGE_DURATION": AUTO_DELETE_MESSAGE_DURATION,
+            "AVG_SPEED": AVG_SPEED,
             "DUMP_CHAT_ID": DUMP_CHAT_ID,
             "LOG_CHAT_ID": LOG_CHAT_ID,
             "TOKEN_TIMEOUT": TOKEN_TIMEOUT,
@@ -2049,6 +2085,8 @@ async def load_config():
             "IS_TEAM_DRIVE": IS_TEAM_DRIVE,
             "USER_LEECH_DESTINATION": USER_LEECH_DESTINATION,
             "LEECH_FILENAME_PREFIX": LEECH_FILENAME_PREFIX,
+            "LEECH_FILENAME_SUFFIX": LEECH_FILENAME_SUFFIX,
+            "LEECH_CAPTION_FONT": LEECH_CAPTION_FONT,
             "LEECH_SPLIT_SIZE": LEECH_SPLIT_SIZE,
             "MEDIA_GROUP": MEDIA_GROUP,
             "MIXED_LEECH": MIXED_LEECH,
