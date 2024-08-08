@@ -142,9 +142,15 @@ def get_readable_time(seconds):
         ("s", 1)
     ]
     result = ""
-    for period_name, period_seconds in periods:
+    for (
+        period_name,
+        period_seconds
+    ) in periods:
         if seconds >= period_seconds:
-            period_value, seconds = divmod(
+            (
+                period_value,
+                seconds
+            ) = divmod(
                 seconds,
                 period_seconds
             )
@@ -153,7 +159,11 @@ def get_readable_time(seconds):
 
 
 def time_to_seconds(time_duration):
-    hours, minutes, seconds = map(int, time_duration.split(":"))
+    (
+        hours,
+        minutes,
+        seconds
+    ) = map(int, time_duration.split(":"))
     return hours * 3600 + minutes * 60 + seconds
 
 
@@ -242,14 +252,14 @@ async def get_readable_message(
             and int(config_dict["AUTO_DELETE_MESSAGE_DURATION"]) > 0
         ):
             msg += (
-                f"```#TellY{index + start_position}: "
+                f"```\n#TEllY{index + start_position}: "
                 f"{escape(f"{task.name()}")}\n```"
                 if elapse <= config_dict["AUTO_DELETE_MESSAGE_DURATION"]
-                else f"<blockquote>#TellY{index + start_position}...(Processing)</blockquote>"
+                else f"\n<blockquote>#TEllY{index + start_position}...(Processing)</blockquote>"
             )
         else:
             msg += (
-                f"```\n#TellY{index + start_position}: "
+                f"```\n#TEllY{index + start_position}: "
                 f"{escape(f"{task.name()}")}\n```"
             )
         if tstatus not in [
@@ -310,24 +320,38 @@ async def get_readable_message(
 
     if len(msg) == 0:
         if status == "All":
-            return None, None
+            return (
+                None,
+                None
+            )
         else:
             msg = f"No Active {status} Tasks!\n\n"
     buttons = ButtonMaker()
+    if is_user:
+        buttons.ibutton(
+            "ʀᴇғʀᴇsʜ",
+            f"status {sid} ref",
+            position="header"
+        )
     if not is_user:
         buttons.ibutton(
-            "Tasks Info",
+            "ᴛᴀsᴋs\nɪɴғᴏ",
             f"status {sid} ov"
         )
         buttons.ibutton(
-            "System Info",
+            "sʏsᴛᴇᴍ\nɪɴғᴏ",
             f"status {sid} stats"
         )
     if len(tasks) > STATUS_LIMIT:
-        msg += f"<b>Page:</b> {page_no}/{pages} | <b>Tasks:</b> {tasks_no} | <b>Step:</b> {page_step}\n"
+        msg += f"<b>Tasks:</b> {tasks_no} | <b>Step:</b> {page_step}\n"
         buttons.ibutton(
             "⫷",
             f"status {sid} pre",
+            position="header"
+        )
+        buttons.ibutton(
+            f"ᴘᴀɢᴇs\n{page_no}/{pages}",
+            f"status {sid} ref",
             position="header"
         )
         buttons.ibutton(
@@ -354,17 +378,15 @@ async def get_readable_message(
         status != "All" or
         tasks_no > 20
     ):
-        for label, status_value in list(STATUSES.items())[:9]:
+        for (
+            label,
+            status_value
+        ) in list(STATUSES.items())[:9]:
             if status_value != status:
                 buttons.ibutton(
                     label,
                     f"status {sid} st {status_value}"
                 )
-    buttons.ibutton(
-        "Refresh",
-        f"status {sid} ref",
-        position="header"
-    )
     button = buttons.build_menu(8)
     msg += (
         f"<b><blockquote>CPU</b>: {cpu_percent()}% | "
