@@ -302,7 +302,10 @@ class TaskConfig:
             ):
                 error_msg.append("DM_MODE and User Session need DUMP_CHAT_ID")
 
-            self.dmMessage, error_button = await isBot_canDm(
+            (
+                self.dmMessage,
+                error_button
+            ) = await isBot_canDm(
                 self.message, # type: ignore
                 dmMode,
                 error_button
@@ -320,7 +323,10 @@ class TaskConfig:
         if error_msg:
             final_msg = f"Hey, <b>{self.tag}</b>,\n"
 
-            for _i, _msg in enumerate(
+            for (
+                _i,
+                _msg
+            ) in enumerate(
                 error_msg,
                 1
             ):
@@ -356,6 +362,7 @@ class TaskConfig:
         if (
             config_dict["DISABLE_SEED"]
             and self.seed
+            and not await isAdmin(self.message) # type: ignore
         ):
             raise ValueError("Seed is Disabled!")
         self.nameSub = (
@@ -518,6 +525,8 @@ class TaskConfig:
                 ):
                     raise ValueError("You must use the same config to clone!")
         else:
+            if self.message.chat.type != self.message.chat.type.SUPERGROUP: # type: ignore
+                raise ValueError("Leech is not allowed in private!\nUse me in a supergroup!")
             self.upDest = (
                 self.upDest
                 or self.userDict.get("leech_dest")
@@ -582,7 +591,8 @@ class TaskConfig:
                         or not member.privileges.can_post_messages 
                     ):
                         raise ValueError(
-                            "I don't have enough privileges in this chat!"
+                            "I don't have enough privileges in the 'leech destination'!\n"
+                            "Allow me 'post messages' and 'manage chat' permissions!"
                         )
                 else:
                     try:
@@ -612,6 +622,7 @@ class TaskConfig:
                         ):
                             raise ValueError(
                                 "I don't have enough permission in LOG_CHAT_ID!"
+                                "Allow me 'post messages' and 'manage chat' permissions!"
                             )
 
                 if config_dict["DUMP_CHAT_ID"]:
@@ -633,6 +644,7 @@ class TaskConfig:
                         ):
                             raise ValueError(
                                 "I don't have enough permission in DUMP_CHAT_ID!"
+                                "Allow me 'post messages' and 'manage chat' permissions!"
                             )
 
             if self.splitSize:
@@ -710,7 +722,15 @@ class TaskConfig:
 
     async def getTag(self, text: list):
         if len(text) > 1 and text[1].startswith("Tag: "):
-            self.tag, id_ = text[1].split("Tag: ")[1].split()
+            user_info = text[1].split("Tag: ")
+            if len(user_info) >= 3:
+                id_ = user_info[-1]
+                self.tag = " ".join(user_info[:-1])
+            else:
+                (
+                    self.tag,
+                    id_
+                ) = text[1].split("Tag: ")[1].split()
             self.user = self.message.from_user = await self.client.get_users(id_) # type: ignore
             self.userId = self.user.id
             self.userDict = user_data.get(
@@ -910,7 +930,11 @@ class TaskConfig:
                     up_path = f"{self.newDir}/{self.name}"
                 else:
                     up_path = dl_path
-                for dirpath, _, files in await sync_to_async(
+                for (
+                    dirpath,
+                    _,
+                    files
+                ) in await sync_to_async(
                     walk,
                     dl_path,
                     topdown=False
@@ -951,7 +975,10 @@ class TaskConfig:
                                     *cmd,
                                     stderr=PIPE
                                 )
-                            _, stderr = await self.suproc.communicate()
+                            (
+                                _,
+                                stderr
+                            ) = await self.suproc.communicate()
                             if self.isCancelled:
                                 return ""
                             code = self.suproc.returncode
@@ -1008,7 +1035,10 @@ class TaskConfig:
                         *cmd,
                         stderr=PIPE
                     )
-                _, stderr = await self.suproc.communicate()
+                (
+                    _,
+                    stderr
+                ) = await self.suproc.communicate()
                 if self.isCancelled:
                     return ""
                 code = self.suproc.returncode
@@ -1111,7 +1141,10 @@ class TaskConfig:
                 *cmd,
                 stderr=PIPE
             )
-        _, stderr = await self.suproc.communicate()
+        (
+            _,
+            stderr
+        ) = await self.suproc.communicate()
         if self.isCancelled:
             return ""
         code = self.suproc.returncode
@@ -1377,7 +1410,11 @@ class TaskConfig:
 
         async def proceedConvert(m_path):
             nonlocal checked
-            is_video, is_audio, _ = await get_document_type(m_path)
+            (
+                is_video,
+                is_audio,
+                _
+            ) = await get_document_type(m_path)
             if (
                 is_video
                 and vext
@@ -1475,7 +1512,11 @@ class TaskConfig:
                         pass
                     return output_file
         else:
-            for dirpath, _, files in await sync_to_async(
+            for (
+                dirpath,
+                _,
+                files
+            ) in await sync_to_async(
                 walk,
                 dl_path,
                 topdown=False
@@ -1572,7 +1613,11 @@ class TaskConfig:
                     return newfolder
         else:
             LOGGER.info(f"Creating Screenshot for: {dl_path}")
-            for dirpath, _, files in await sync_to_async(
+            for (
+                dirpath,
+                _,
+                files
+            ) in await sync_to_async(
                 walk,
                 dl_path,
                 topdown=False
@@ -1591,7 +1636,10 @@ class TaskConfig:
 
     async def substitute(self, dl_path):
         if await aiopath.isfile(dl_path):
-            up_dir, name = dl_path.rsplit(
+            (
+                up_dir,
+                name
+            ) = dl_path.rsplit(
                 "/",
                 1
             )
@@ -1621,7 +1669,11 @@ class TaskConfig:
             )
             return new_path
         else:
-            for dirpath, _, files in await sync_to_async(
+            for (
+                dirpath,
+                _,
+                files
+            ) in await sync_to_async(
                 walk,
                 dl_path,
                 topdown=False
