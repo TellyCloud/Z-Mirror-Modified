@@ -16,9 +16,8 @@ from bot import (
     OWNER_ID,
     task_dict,
     task_dict_lock,
-    user_data,
+    user_data
 )
-from bot.helper.ext_utils.bot_utils import new_task
 from bot.helper.ext_utils.status_utils import (
     getTaskByGid,
     getAllTasks,
@@ -33,7 +32,7 @@ from bot.helper.telegram_helper.message_utils import (
     sendMessage,
     auto_delete_message,
     deleteMessage,
-    editMessage,
+    editMessage
 )
 
 
@@ -159,70 +158,70 @@ async def cancel_all(status, userId):
 def create_cancel_buttons(isSudo, userId=""):
     buttons = button_build.ButtonMaker()
     buttons.ibutton(
-        "Downloading",
+        "ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ",
         f"canall ms {(MirrorStatus.STATUS_DOWNLOADING).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "Uploading",
+        "ᴜᴘʟᴏᴀᴅɪɴɢ",
         f"canall ms {(MirrorStatus.STATUS_UPLOADING).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "Seeding",
+        "ꜱᴇᴇᴅɪɴɢ",
         f"canall ms {(MirrorStatus.STATUS_SEEDING).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "Spltting",
+        "ꜱᴘʟᴛᴛɪɴɢ",
         f"canall ms {(MirrorStatus.STATUS_SPLITTING).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "Cloning",
+        "ᴄʟᴏɴɪɴɢ",
         f"canall ms {(MirrorStatus.STATUS_CLONING).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "Extracting",
+        "ᴇxᴛʀᴀᴄᴛɪɴɢ",
         f"canall ms {(MirrorStatus.STATUS_EXTRACTING).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "Archiving",
+        "ᴀʀᴄʜɪᴠɪɴɢ",
         f"canall ms {(MirrorStatus.STATUS_ARCHIVING).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "QueuedDl",
+        "Qᴜᴇᴜᴇᴅᴅʟ",
         f"canall ms {(MirrorStatus.STATUS_QUEUEDL).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "QueuedUp",
+        "Qᴜᴇᴜᴇᴅᴜᴘ",
         f"canall ms {(MirrorStatus.STATUS_QUEUEUP).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "SampleVideo",
+        "ꜱᴀᴍᴘʟᴇᴠɪᴅᴇᴏ",
         f"canall ms {(MirrorStatus.STATUS_SAMVID).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "ConvertMedia",
+        "ᴄᴏɴᴠᴇʀᴛᴍᴇᴅɪᴀ",
         f"canall ms {(MirrorStatus.STATUS_CONVERTING).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "Paused",
+        "ᴘᴀᴜꜱᴇᴅ",
         f"canall ms {(MirrorStatus.STATUS_PAUSED).split(' ')[0]} {userId}"
     )
     buttons.ibutton(
-        "All",
+        "ᴀʟʟ",
         f"canall ms All {userId}"
     )
     if isSudo:
         if userId:
             buttons.ibutton(
-                "All Added Tasks",
+                "ᴀʟʟ ᴀᴅᴅᴇᴅ ᴛᴀꜱᴋꜱ",
                 f"canall bot ms {userId}"
             )
         else:
             buttons.ibutton(
-                "My Tasks",
+                "ᴍʏ ᴛᴀꜱᴋꜱ",
                 f"canall user ms {userId}"
             )
     buttons.ibutton(
-        "Close",
+        "ᴄʟᴏꜱᴇ",
         f"canall close ms {userId}"
     )
     return buttons.build_menu(2)
@@ -266,7 +265,6 @@ async def cancell_all_buttons(_, message):
     )
 
 
-@new_task
 async def cancel_all_update(_, query):
     data = query.data.split()
     message = query.message
@@ -327,15 +325,15 @@ async def cancel_all_update(_, query):
     elif data[1] == "ms":
         buttons = button_build.ButtonMaker()
         buttons.ibutton(
-            "Yes!",
+            "ʏᴇꜱ!",
             f"canall {data[2]} confirm {userId}"
         )
         buttons.ibutton(
-            "Back",
+            "ʙᴀᴄᴋ",
             f"canall back confirm {userId}"
         )
         buttons.ibutton(
-            "Close",
+            "ᴄʟᴏꜱᴇ",
             f"canall close confirm {userId}"
         )
         button = buttons.build_menu(2)
@@ -374,7 +372,8 @@ bot.add_handler( # type: ignore
     MessageHandler(
         cancel_task,
         filters=command(
-            BotCommands.CancelTaskCommand
+            BotCommands.CancelTaskCommand,
+            case_sensitive=True
         ) & CustomFilters.authorized,
     )
 )
@@ -390,7 +389,8 @@ bot.add_handler( # type: ignore
     MessageHandler(
         cancell_all_buttons,
         filters=command(
-            BotCommands.CancelAllCommand
+            BotCommands.CancelAllCommand,
+            case_sensitive=True
         ) & CustomFilters.authorized,
     )
 )
