@@ -4,6 +4,7 @@ from asyncio import (
 )
 from pyrogram.errors import (
     FloodWait,
+    FloodPremiumWait,
     PeerIdInvalid,
     RPCError,
     UserNotParticipant,
@@ -111,7 +112,7 @@ async def sendRss(text):
             disable_web_page_preview=True,
             disable_notification=True,
         )
-    except FloodWait as f:
+    except (FloodWait, FloodPremiumWait) as f:
         LOGGER.warning(str(f))
         await sleep(f.value * 1.2) # type: ignore
         return await sendRss(text)
@@ -346,9 +347,15 @@ async def sendStatusMessage(msg, user_id=0):
                 )
                 return
             message.text = text
-            status_dict[sid].update({"message": message, "time": time()})
+            status_dict[sid].update({
+                "message": message,
+                "time": time()
+            })
         else:
-            text, buttons = await get_readable_message(
+            (
+                text,
+                buttons
+            ) = await get_readable_message(
                 sid,
                 is_user
             )
@@ -405,7 +412,7 @@ async def isBot_canDm(message, dmMode, button=None):
             button = ButtonMaker()
         _msg = "You need to <b>Start</b> me in <b>DM</b>."
         button.ubutton(
-            "Start Me",
+            "ꜱᴛᴀʀᴛ\nᴍᴇ",
             f"https://t.me/{bot_name}?start=start",
             "header"
         )
@@ -529,7 +536,10 @@ async def forcesub(message, ids, button=None):
         if button is None:
             button = ButtonMaker()
         _msg = f"You need to join our channel to use me."
-        for key, value in join_button.items():
+        for (
+            key,
+            value
+        ) in join_button.items():
             button.ubutton(
                 f"{key}",
                 value,
@@ -570,11 +580,11 @@ async def anno_checker(message, pmsg=None):
     msg_id = message.id
     buttons = ButtonMaker()
     buttons.ibutton(
-        "Verify",
+        "ᴠᴇʀɪꜰʏ",
         f"verify admin {msg_id}"
     )
     buttons.ibutton(
-        "Cancel",
+        "ᴄᴀɴᴄᴇʟ",
         f"verify no {msg_id}"
     )
     user = None
