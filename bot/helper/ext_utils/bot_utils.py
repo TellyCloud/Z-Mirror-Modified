@@ -5,7 +5,6 @@ from asyncio import (
     sleep,
 )
 from asyncio.subprocess import PIPE
-from concurrent.futures import ThreadPoolExecutor
 from functools import partial, wraps
 
 from pyrogram.types import BotCommand
@@ -26,8 +25,6 @@ from bot.helper.ext_utils.telegraph_helper import telegraph
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.telegram_helper.bot_commands import BotCommands
 
-THREADPOOL = ThreadPoolExecutor(max_workers=1000)
-
 COMMAND_USAGE = {}
 
 
@@ -45,7 +42,10 @@ class setInterval:
     async def _set_interval(self, *args, **kwargs):
         while True:
             await sleep(self.interval)
-            await self.action(*args, **kwargs)
+            await self.action(
+                *args,
+                **kwargs
+            )
 
     def cancel(self):
         self.task.cancel()
@@ -59,12 +59,12 @@ def create_help_buttons():
             f"help mirror {name}"
         )
     buttons.ibutton(
-        "Close",
+        "ᴄʟᴏꜱᴇ",
         "help close"
     )
     COMMAND_USAGE["mirror"] = [
         MIRROR_HELP_DICT["main"],
-        buttons.build_menu(3)
+        buttons.build_menu(2)
     ]
     buttons.reset()
     for name in list(YT_HELP_DICT.keys())[1:]:
@@ -73,12 +73,12 @@ def create_help_buttons():
             f"help yt {name}"
         )
     buttons.ibutton(
-        "Close",
+        "ᴄʟᴏꜱᴇ",
         "help close"
     )
     COMMAND_USAGE["yt"] = [
         YT_HELP_DICT["main"],
-        buttons.build_menu(3)
+        buttons.build_menu(2)
     ]
     buttons.reset()
     for name in list(CLONE_HELP_DICT.keys())[1:]:
@@ -87,12 +87,12 @@ def create_help_buttons():
             f"help clone {name}"
         )
     buttons.ibutton(
-        "Close",
+        "ᴄʟᴏꜱᴇ",
         "help close"
     )
     COMMAND_USAGE["clone"] = [
         CLONE_HELP_DICT["main"],
-        buttons.build_menu(3)
+        buttons.build_menu(2)
     ]
 
 
@@ -113,24 +113,24 @@ def bt_selection_buttons(id_):
     BASE_URL = config_dict["BASE_URL"]
     if config_dict["WEB_PINCODE"]:
         buttons.ubutton(
-            "Select Files",
+            "ꜱᴇʟᴇᴄᴛ ꜰɪʟᴇꜱ",
             f"{BASE_URL}/app/files/{id_}"
         )
         buttons.ibutton(
-            "Pincode",
+            "ᴘɪɴᴄᴏᴅᴇ",
             f"sel pin {gid} {pincode}"
         )
     else:
         buttons.ubutton(
-            "Select Files",
+            "ꜱᴇʟᴇᴄᴛ ꜰɪʟᴇꜱ",
             f"{BASE_URL}/app/files/{id_}?pin_code={pincode}"
         )
     buttons.ibutton(
-        "Done Selecting",
+        "ᴅᴏɴᴇ ꜱᴇʟᴇᴄᴛɪɴɢ",
         f"sel done {gid} {id_}"
     )
     buttons.ibutton(
-        "Cancel",
+        "ᴄʟᴏꜱᴇ",
         f"sel cancel {gid}"
     )
     return buttons.build_menu(2)
@@ -138,7 +138,10 @@ def bt_selection_buttons(id_):
 
 def extra_btns(buttons):
     if extra_buttons:
-        for btn_name, btn_url in extra_buttons.items():
+        for (
+            btn_name,
+            btn_url
+        ) in extra_buttons.items():
             buttons.ubutton(
                 btn_name,
                 btn_url
@@ -151,71 +154,67 @@ async def set_commands(client):
         await client.set_bot_commands([
             BotCommand(
                 f"{BotCommands.MirrorCommand[0]}",
-                "Mirror direct links using Aria2"
+                "ᴍɪʀʀᴏʀ ᴅɪʀᴇᴄᴛ ʟɪɴᴋꜱ ᴜꜱɪɴɢ ᴀʀɪᴀ2ᴄ"
             ),
             BotCommand(
                 f"{BotCommands.QbMirrorCommand[0]}",
-                "Mirror torrents using qBittorrent"
+                "ᴍɪʀʀᴏʀ Qʙɪᴛ-ᴛᴏʀʀᴇɴᴛ ꜱᴜᴘᴘᴏʀᴛᴇᴅ ʟɪɴᴋꜱ ᴏʀ ꜰɪʟᴇꜱ"
             ),
             BotCommand(
                 f"{BotCommands.YtdlCommand[0]}",
-                "Mirror yt-dlp supported links"
+                "ᴍɪʀʀᴏʀ ʏᴛ-ᴅʟᴘ ꜱᴜᴘᴘᴏʀᴛᴇᴅ ʟɪɴᴋꜱ"
             ),
             BotCommand(
                 f"{BotCommands.LeechCommand[0]}",
-                "Leech direct links using Aria2"
+                "ʟᴇᴇᴄʜ ᴅɪʀᴇᴄᴛ ʟɪɴᴋꜱ ᴜꜱɪɴɢ ᴀʀɪᴀ2ᴄ"
             ),
             BotCommand(
                 f"{BotCommands.QbLeechCommand[0]}",
-                "Leech torrents using qBittorrent"
+                "ʟᴇᴇᴄʜ Qʙɪᴛ-ᴛᴏʀʀᴇɴᴛ ꜱᴜᴘᴘᴏʀᴛᴇᴅ ʟɪɴᴋꜱ ᴏʀ ꜰɪʟᴇꜱ"
             ),
             BotCommand(
                 f"{BotCommands.YtdlLeechCommand[0]}",
-                "Leech yt-dlp supported links"
+                "ʟᴇᴇᴄʜ ʏᴛ-ᴅʟᴘ ꜱᴜᴘᴘᴏʀᴛᴇᴅ ʟɪɴᴋꜱ"
             ),
             BotCommand(
                 f"{BotCommands.CloneCommand}",
-                "Copy file/folder to Drive"
+                "ᴄᴏᴘʏ ꜰɪʟᴇ ᴏʀ ꜰᴏʟᴅᴇʀ ᴛᴏ ᴛʜᴇ ᴅʀɪᴠᴇ"
             ),
             BotCommand(
                 f"{BotCommands.CountCommand}",
-                "[drive_url]: Count file/folder of Google Drive."
+                "[ᴅʀɪᴠᴇ ᴜʀʟ]: ᴄᴏᴜɴᴛ ꜰɪʟᴇ ᴏʀ ꜰᴏʟᴅᴇʀ ᴏꜰ ᴛʜᴇ ɢᴏᴏɢʟᴇ ᴅʀɪᴠᴇ"
             ),
             BotCommand(
                 f"{BotCommands.StatusCommand[0]}",
-                "Get mirror status message"
+                "ɢᴇᴛ ᴀʟʟ ᴛᴀꜱᴋꜱ ꜱᴛᴀᴛᴜꜱ ᴍᴇꜱꜱᴀɢᴇ"
             ),
             BotCommand(
                 f"{BotCommands.StatsCommand[0]}",
-                "Check bot stats"
-            ),
-            BotCommand(
-                f"{BotCommands.SelectCommand}",
-                "Select files to download only torrents"
+                "ᴄʜᴇᴄᴋ ʙᴏᴛ ꜱᴛᴀᴛꜱ"
             ),
             BotCommand(
                 f"{BotCommands.CancelTaskCommand[0]}",
-                "Cancel a Task"
+                "ᴄᴀɴᴄᴇʟ ᴀ ᴛᴀꜱᴋ"
             ),
             BotCommand(
                 f"{BotCommands.CancelAllCommand}",
-                "Cancel all tasks which added by you."
+                "ᴄᴀɴᴄᴇʟ ᴀʟʟ ᴛᴀꜱᴋꜱ ᴡʜɪᴄʜ ᴀᴅᴅᴇᴅ ʙʏ ʏᴏᴜ"
             ),
             BotCommand(
                 f"{BotCommands.ListCommand}",
-                "Search in Drive"
+                "ꜱᴇᴀʀᴄʜ ɪɴ ᴅʀɪᴠᴇ"
             ),
             BotCommand(
                 f"{BotCommands.SearchCommand}",
-                "Search in Torrent"
+                "ꜱᴇᴀʀᴄʜ ɪɴ ᴛᴏʀʀᴇɴᴛ"
             ),
             BotCommand(
                 f"{BotCommands.UserSetCommand[0]}",
-                "Users settings"
+                "ᴜꜱᴇʀꜱ ꜱᴇᴛᴛɪɴɢꜱ"
             ),
             BotCommand(
                 f"{BotCommands.HelpCommand}",
-                "Get detailed help"
+                "ɢᴇᴛ ᴅᴇᴛᴀɪʟᴇᴅ ʜᴇʟᴘ"
             ),
         ])
 
@@ -224,7 +223,7 @@ async def get_telegraph_list(telegraph_content):
     path = [
         (
             await telegraph.create_page(
-                title="Mirror-Leech-Bot Drive Search",
+                title="ᴢ-ᴍɪʀʀᴏʀ ᴅʀɪᴠᴇ ꜱᴇᴀʀᴄʜ",
                 content=content
             )
         )["path"]
@@ -237,7 +236,7 @@ async def get_telegraph_list(telegraph_content):
         )
     buttons = ButtonMaker()
     buttons.ubutton(
-        "🔎 VIEW",
+        "🔎 ᴠɪᴇᴡ\nʀᴇꜱᴜʟᴛꜱ",
         f"https://telegra.ph/{path[0]}"
     )
     return buttons.build_menu(1)
@@ -289,7 +288,10 @@ def arg_parser(items, arg_base):
                 for j in range(i + 1, t):
                     item = items[j]
                     if item in arg_base:
-                        if part in bool_arg_set and not sub_list:
+                        if (
+                            part in bool_arg_set
+                            and not sub_list
+                        ):
                             arg_base[part] = True
                         break
                     sub_list.append(item)
@@ -297,7 +299,10 @@ def arg_parser(items, arg_base):
                 if sub_list:
                     arg_base[part] = " ".join(sub_list)
         i += 1
-    if "link" in arg_base and items[0] not in arg_base:
+    if (
+        "link" in arg_base
+        and items[0] not in arg_base
+    ):
         link = []
         if arg_start == -1:
             link.extend(iter(items))
@@ -377,7 +382,11 @@ async def cmd_exec(cmd, shell=False):
         stderr = stderr.decode().strip()
     except:
         stderr = "Unable to decode the error!"
-    return stdout, stderr, proc.returncode
+    return (
+        stdout,
+        stderr,
+        proc.returncode
+    )
 
 
 def new_task(func):
@@ -386,12 +395,17 @@ def new_task(func):
         *args,
         **kwargs
     ):
-        return bot_loop.create_task(
+        bot_loop.create_task(
             func(
                 *args,
                 **kwargs
             )
         )
+
+        async def dummy():
+            pass
+
+        return dummy
 
     return wrapper
 
@@ -403,10 +417,14 @@ async def sync_to_async(func, *args, wait=True, **kwargs):
         **kwargs
     )
     future = bot_loop.run_in_executor(
-        THREADPOOL,
+        None,
         pfunc
     )
-    return await future if wait else future
+    return (
+        await future
+        if wait
+        else future
+    )
 
 
 def async_to_sync(func, *args, wait=True, **kwargs):
@@ -417,7 +435,11 @@ def async_to_sync(func, *args, wait=True, **kwargs):
         ),
         bot_loop
     )
-    return future.result() if wait else future
+    return (
+        future.result()
+        if wait
+        else future
+    )
 
 
 def new_thread(func):
@@ -434,6 +456,10 @@ def new_thread(func):
             ),
             bot_loop
         )
-        return future.result() if wait else future
+        return (
+            future.result()
+            if wait
+            else future
+        )
 
     return wrapper
