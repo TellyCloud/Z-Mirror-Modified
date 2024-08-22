@@ -24,7 +24,6 @@ from bot import (
 from bot.helper.ext_utils.bot_utils import (
     cmd_exec,
     new_thread,
-    new_task,
     update_user_ldata,
 )
 from bot.helper.ext_utils.db_handler import DbManager
@@ -43,7 +42,6 @@ from bot.helper.telegram_helper.message_utils import (
 LIST_LIMIT = 6
 
 
-@new_task
 async def path_updates(_, query, obj):
     await query.answer()
     message = query.message
@@ -263,7 +261,10 @@ class RcloneList:
                     "rcq itype --dirs-only",
                     position="footer"
                 )
-        if self.list_status == "rcu" or len(self.path_list) > 0:
+        if (
+            self.list_status == "rcu"
+            or len(self.path_list) > 0
+        ):
             buttons.ibutton(
                 "Choose Current Path",
                 "rcq cur",
@@ -336,7 +337,11 @@ class RcloneList:
         ]
         if self.listener.isCancelled:
             return
-        res, err, code = await cmd_exec(cmd)
+        (
+            res,
+            err,
+            code
+        ) = await cmd_exec(cmd)
         if code not in [0, -9]:
             if not err:
                 err = "Use <code>/shell cat rlog.txt</code> to see more information"
