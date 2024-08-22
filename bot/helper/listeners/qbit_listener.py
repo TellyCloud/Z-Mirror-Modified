@@ -98,7 +98,10 @@ async def _stop_duplicate(tor):
                 ".!qB",
                 1
             )[0]
-            msg, button = await stop_duplicate_check(task.listener) # type: ignore
+            (
+                msg,
+                button
+            ) = await stop_duplicate_check(task.listener) # type: ignore
             if msg:
                 _onDownloadError(
                     msg,
@@ -136,7 +139,7 @@ async def _avg_speed_check(tor):
             start_time = time()
             total_speed = 0
             count = 0
-            while time() - start_time < 600:
+            while time() - start_time < 1800:
                 live_dl = await sync_to_async(
                     qbittorrent_client.torrents_info,
                     torrent_hashes=tor.hash
