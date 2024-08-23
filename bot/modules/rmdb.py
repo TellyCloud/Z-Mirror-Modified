@@ -3,7 +3,6 @@ from pyrogram.filters import command
 from pyrogram.handlers import MessageHandler
 
 from bot import DATABASE_URL, bot, config_dict
-from bot.helper.ext_utils.bot_utils import new_task
 from bot.helper.ext_utils.links_utils import (
     is_magnet,
     is_url
@@ -15,7 +14,6 @@ from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.message_utils import sendMessage
 
 
-@new_task
 async def rmAllTokens(_, message):
     if DATABASE_URL:
         await DbManager().delete_all_access_tokens()
@@ -28,7 +26,6 @@ async def rmAllTokens(_, message):
     )
 
 
-@new_task
 async def rmdbNode(_, message):
     if (
         DATABASE_URL
@@ -122,7 +119,8 @@ if DATABASE_URL:
         MessageHandler(
             rmdbNode,
             filters=command(
-                BotCommands.RmdbCommand
+                BotCommands.RmdbCommand,
+                case_sensitive=True
             ) & CustomFilters.sudo
         )
     )
@@ -130,7 +128,8 @@ if DATABASE_URL:
         MessageHandler(
             rmAllTokens,
             filters=command(
-                BotCommands.RmalltokensCommand
+                BotCommands.RmalltokensCommand,
+                case_sensitive=True
             ) & CustomFilters.sudo
         )
     )
