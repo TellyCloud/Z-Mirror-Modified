@@ -4,8 +4,17 @@ from http.cookiejar import MozillaCookieJar
 from json import loads
 from lxml.etree import HTML
 from os import path as ospath
-from re import findall, match, search
-from requests import Session, post, get
+from re import (
+    findall,
+    match,
+    search
+)
+from requests import (
+    Session,
+    post,
+    get,
+    RequestException
+)
 from requests.adapters import HTTPAdapter
 from time import sleep
 from urllib.parse import (
@@ -158,6 +167,7 @@ def direct_link_generator(link):
             "terabox.app",
             "gibibox.com",
             "goaibox.com",
+            "terasharelink.com",
         ]
     ):
         return terabox(link)
@@ -234,7 +244,10 @@ def direct_link_generator(link):
 
 def get_captcha_token(session, params):
     recaptcha_api = "https://www.google.com/recaptcha/api2"
-    res = session.get(f"{recaptcha_api}/anchor", params=params)
+    res = session.get(
+        f"{recaptcha_api}/anchor",
+        params=params
+    )
     anchor_html = HTML(res.text)
     if not (anchor_token := anchor_html.xpath('//input[@id="recaptcha-token"]/@value')):
         return
@@ -254,6 +267,11 @@ def get_captcha_token(session, params):
 def mediafire(url, session=None):
     if "/folder/" in url:
         return mediafireFolder(url)
+    if "::" in url:
+        _password = url.split("::")[-1]
+        url = url.split("::")[-2]
+    else:
+        _password = ""
     if final_link := findall(
         r"https?:\/\/download\d+\.mediafire\.com\/\S+\/\S+\/\S+",
         url
@@ -271,13 +289,28 @@ def mediafire(url, session=None):
     if error := html.xpath('//p[@class="notranslate"]/text()'):
         session.close()
         raise DirectDownloadLinkException(f"ERROR: {error[0]}")
+    if html.xpath("//div[@class='passwordPrompt']"):
+        if not _password:
+            session.close()
+            raise DirectDownloadLinkException(f"ERROR: {PASSWORD_ERROR_MESSAGE}".format(url))
+        try:
+            html = HTML(session.post(url, data={"downloadp": _password}).text)
+        except Exception as e:
+            session.close()
+            raise DirectDownloadLinkException(f"ERROR: {e.__class__.__name__}") from e
+        if html.xpath("//div[@class='passwordPrompt']"):
+            session.close()
+            raise DirectDownloadLinkException("ERROR: Wrong password.")
     if not (final_link := html.xpath("//a[@id='downloadButton']/@href")):
         session.close()
         raise DirectDownloadLinkException(
             "ERROR: No links found in this page Try Again"
         )
     if final_link[0].startswith("//"):
-        return mediafire(f"https://{final_link[0][2:]}", session)
+        final_url = f"https://{final_link[0][2:]}"
+        if _password:
+            final_url += f"::{_password}"
+        return mediafire(final_url, session)
     session.close()
     return final_link[0]
 
@@ -616,117 +649,87 @@ def uploadee(url):
         raise DirectDownloadLinkException("ERROR: Direct Link not found")
 
 
-def terabox(url):
-    if not ospath.isfile("terabox.txt"):
-        raise DirectDownloadLinkException("ERROR: terabox.txt not found")
-    try:
-        jar = MozillaCookieJar("terabox.txt")
-        jar.load()
-    except Exception as e:
-        raise DirectDownloadLinkException(f"ERROR: {e.__class__.__name__}")
-    cookies = {}
-    for cookie in jar:
-        cookies[cookie.name] = cookie.value
+def terabox(url, video_quality="HD Video", save_dir="HD_Video"):
+    """Terabox direct link generator
+    https://github.com/Dawn-India/Z-Mirror"""
+
+    pattern = r"/s/(\w+)|surl=(\w+)"
+    if not search(pattern, url):
+        raise DirectDownloadLinkException("ERROR: Invalid terabox URL")
+
+    netloc = urlparse(url).netloc
+    terabox_url = url.replace(
+        netloc,
+        "1024tera.com"
+    )
+
+    urls = [
+        "https://ytshorts.savetube.me/api/v1/terabox-downloader",
+        f"https://teraboxvideodownloader.nepcoderdevs.workers.dev/?url={terabox_url}",
+        f"https://terabox.udayscriptsx.workers.dev/?url={terabox_url}"
+    ]
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Content-Type": "application/json",
+        "Origin": "https://ytshorts.savetube.me",
+        "Alt-Used": "ytshorts.savetube.me",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin"
+    }
+
+    for base_url in urls:
+        try:
+            if "api/v1" in base_url:
+                response = post(
+                    base_url,
+                    headers=headers,
+                    json={"url": terabox_url}
+                )
+            else:
+                response = get(base_url)
+
+            if response.status_code == 200:
+                break
+        except RequestException as e:
+            raise DirectDownloadLinkException(f"ERROR: {e.__class__.__name__}") from e
+    else:
+        raise DirectDownloadLinkException("ERROR: Unable to fetch the JSON data")
+
+    data = response.json()
     details = {
         "contents": [],
         "title": "",
         "total_size": 0
     }
-    details["header"] = " ".join(
-        f"{key}: {value}"
-        for key, value
-        in cookies.items()
-    )
 
-    def __fetch_links(session, dir_="", folderPath=""):
-        params = {
-            "app_id": "250528",
-            "jsToken": jsToken,
-            "shorturl": shortUrl
-        }
-        if dir_:
-            params["dir"] = dir_
-        else:
-            params["root"] = "1"
-        try:
-            _json = session.get(
-                "https://www.1024tera.com/share/list",
-                params=params,
-                cookies=cookies,
-            ).json()
-        except Exception as e:
-            raise DirectDownloadLinkException(f"ERROR: {e.__class__.__name__}")
-        if _json["errno"] not in [
-            0,
-            "0"
-        ]:
-            if "errmsg" in _json:
-                raise DirectDownloadLinkException(f"ERROR: {_json['errmsg']}")
-            else:
-                raise DirectDownloadLinkException("ERROR: Something went wrong!")
-
-        if "list" not in _json:
-            return
-        contents = _json["list"]
-        for content in contents:
-            if content["isdir"] in [
-                "1",
-                1
-            ]:
-                if not folderPath:
-                    if not details["title"]:
-                        details["title"] = content["server_filename"]
-                        newFolderPath = ospath.join(details["title"])
-                    else:
-                        newFolderPath = ospath.join(
-                            details["title"],
-                            content["server_filename"]
-                        )
-                else:
-                    newFolderPath = ospath.join(folderPath, content["server_filename"])
-                __fetch_links(
-                    session,
-                    content["path"],
-                    newFolderPath
+    for item in data["response"]:
+        title = item["title"]
+        resolutions = item.get(
+            "resolutions",
+            {}
+        )
+        zlink = resolutions.get(video_quality)
+        if zlink:
+            details["contents"].append({
+                "url": zlink,
+                "filename": title,
+                "path": ospath.join(
+                    title,
+                    save_dir
                 )
-            else:
-                if not folderPath:
-                    if not details["title"]:
-                        details["title"] = content["server_filename"]
-                    folderPath = details["title"]
-                item = {
-                    "url": content["dlink"],
-                    "filename": content["server_filename"],
-                    "path": ospath.join(folderPath),
-                }
-                if "size" in content:
-                    size = content["size"]
-                    if isinstance(size, str) and size.isdigit():
-                        size = float(size)
-                    details["total_size"] += size
-                details["contents"].append(item)
+            })
+        details["title"] = title
 
-    with Session() as session:
-        try:
-            _res = session.get(
-                url,
-                cookies=cookies
-            )
-        except Exception as e:
-            raise DirectDownloadLinkException(f"ERROR: {e.__class__.__name__}")
-        if jsToken := findall(r"window\.jsToken.*%22(.*)%22", _res.text):
-            jsToken = jsToken[0]
-        else:
-            raise DirectDownloadLinkException("ERROR: jsToken not found!.")
-        shortUrl = parse_qs(urlparse(_res.url).query).get("surl")
-        if not shortUrl:
-            raise DirectDownloadLinkException("ERROR: Could not find surl")
-        try:
-            __fetch_links(session)
-        except Exception as e:
-            raise DirectDownloadLinkException(e)
+    if not details["contents"]:
+        raise DirectDownloadLinkException("ERROR: No valid download links found")
+
     if len(details["contents"]) == 1:
         return details["contents"][0]["url"]
+
     return details
 
 
@@ -1198,6 +1201,11 @@ def gofile(url):
 
 
 def mediafireFolder(url):
+    if "::" in url:
+        _password = url.split("::")[-1]
+        url = url.split("::")[-2]
+    else:
+        _password = ""
     try:
         raw = url.split("/", 4)[-1]
         folderkey = raw.split("/", 1)[0]
@@ -1282,6 +1290,17 @@ def mediafireFolder(url):
             html = HTML(session.get(url).text)
         except:
             return
+        if html.xpath("//div[@class='passwordPrompt']"):
+            if not _password:
+                raise DirectDownloadLinkException(
+                    f"ERROR: {PASSWORD_ERROR_MESSAGE}".format(url)
+                )
+            try:
+                html = HTML(session.post(url, data={"downloadp": _password}).text)
+            except:
+                return
+            if html.xpath("//div[@class='passwordPrompt']"):
+                return
         if final_link := html.xpath("//a[@id='downloadButton']/@href"):
             return final_link[0]
 
