@@ -37,7 +37,6 @@ from bot import (
 )
 from bot.helper.ext_utils.bot_utils import (
     cmd_exec,
-    new_task,
     sync_to_async
 )
 from bot.helper.ext_utils.status_utils import (
@@ -62,15 +61,14 @@ from bot.helper.telegram_helper.message_utils import (
 from bot.helper.telegram_helper.button_build import ButtonMaker
 
 
-@new_task
 async def mirror_status(_, message):
     async with task_dict_lock:
         count = len(task_dict)
     if count == 0:
         currentTime = get_readable_time(time() - botStartTime) # type: ignore
         free = get_readable_file_size(disk_usage(DOWNLOAD_DIR).free)
-        msg = "Stop it! Get some help!\n\nNo Active Tasks!\n\n"
-        msg += f"Each user can get status for his tasks by adding me or user_id after cmd: /{BotCommands.StatusCommand[0]} me\n\n"
+        msg = "Stop it!\nGet some help!\n\nNo Active Tasks!\n\n"
+        msg += f"Get your tasks status by adding me or user_id after cmd: /{BotCommands.StatusCommand[0]} me\n\n"
         msg += (
             f"\n<b>CPU:</b> {cpu_percent()}% | <b>FREE:</b> {free}"
             f"\n<b>RAM:</b> {virtual_memory().percent}% | <b>UPTIME:</b> {currentTime}"
@@ -104,7 +102,6 @@ async def mirror_status(_, message):
         await deleteMessage(message)
 
 
-@new_task
 async def status_pages(_, query):
     user_id = query.from_user.id
     spam = (
@@ -326,19 +323,19 @@ async def stats(_, message, edit_mode=False):
                 f"<b>Total:</b> <code>{total}</code> | <b>Free:</b> <code>{free}</code>"
 
     buttons.ibutton(
-        "Sys Stats",
+        "ꜱʏꜱᴛᴇᴍ\nꜱᴛᴀᴛꜱ",
         "show_sys_stats"
     )
     buttons.ibutton(
-        "Repo Stats",
+        "ʀᴇᴘᴏ\nꜱᴛᴀᴛꜱ",
         "show_repo_stats"
     )
     buttons.ibutton(
-        "Bot Limits",
+        "ʙᴏᴛ\nʟɪᴍɪᴛꜱ",
         "show_bot_limits"
     )
     buttons.ibutton(
-        "Close",
+        "ᴄʟᴏꜱᴇ",
         "close_signal"
     )
     sbtns = buttons.build_menu(2)
@@ -352,25 +349,28 @@ async def stats(_, message, edit_mode=False):
 
 async def send_bot_stats(_, query):
     buttons = ButtonMaker()
-    bot_stats, _ = await stats(
+    (
+        bot_stats,
+        _
+    ) = await stats(
         _,
         query.message,
         edit_mode=True
     )
     buttons.ibutton(
-        "Sys Stats",
+        "ꜱʏꜱᴛᴇᴍ\nꜱᴛᴀᴛꜱ",
         "show_sys_stats"
     )
     buttons.ibutton(
-        "Repo Stats",
+        "ʀᴇᴘᴏ\nꜱᴛᴀᴛꜱ",
         "show_repo_stats"
     )
     buttons.ibutton(
-        "Bot Limits",
+        "ʙᴏᴛ\nʟɪᴍɪᴛꜱ",
         "show_bot_limits"
     )
     buttons.ibutton(
-        "Close",
+        "ᴄʟᴏꜱᴇ",
         "close_signal"
     )
     sbtns = buttons.build_menu(2)
@@ -383,25 +383,28 @@ async def send_bot_stats(_, query):
 
 async def send_sys_stats(_, query):
     buttons = ButtonMaker()
-    _, sys_stats = await stats(
+    (
+        _,
+        sys_stats
+    ) = await stats(
         _,
         query.message,
         edit_mode=True
     )
     buttons.ibutton(
-        "Bot Stats",
+        "ʙᴏᴛ\nꜱᴛᴀᴛꜱ",
         "show_bot_stats"
     )
     buttons.ibutton(
-        "Repo Stats",
+        "ʀᴇᴘᴏ\nꜱᴛᴀᴛꜱ",
         "show_repo_stats"
     )
     buttons.ibutton(
-        "Bot Limits",
+        "ʙᴏᴛ\nʟɪᴍɪᴛꜱ",
         "show_bot_limits"
     )
     buttons.ibutton(
-        "Close",
+        "ᴄʟᴏꜱᴇ",
         "close_signal"
     )
     sbtns = buttons.build_menu(2)
@@ -498,19 +501,19 @@ async def send_repo_stats(_, query):
                  f"<b>{update_info}</b>"
 
     buttons.ibutton(
-        "Bot Stats", 
+        "ʙᴏᴛ\nꜱᴛᴀᴛꜱ", 
         "show_bot_stats"
     )
     buttons.ibutton(
-        "Sys Stats",
+        "ꜱʏꜱᴛᴇᴍ\nꜱᴛᴀᴛꜱ",
         "show_sys_stats"
     )
     buttons.ibutton(
-        "Bot Limits",
+        "ʙᴏᴛ\nʟɪᴍɪᴛꜱ",
         "show_bot_limits"
     )
     buttons.ibutton(
-        "Close",
+        "ᴄʟᴏꜱᴇ",
         "close_signal"
     )
     sbtns = buttons.build_menu(2)
@@ -525,6 +528,7 @@ async def send_bot_limits(_, query):
     buttons = ButtonMaker()
     DIR = "Unlimited" if config_dict["DIRECT_LIMIT"] == "" else config_dict["DIRECT_LIMIT"]
     YTD = "Unlimited" if config_dict["YTDLP_LIMIT"] == "" else config_dict["YTDLP_LIMIT"]
+    YTP = "Unlimited" if config_dict["PLAYLIST_LIMIT"] == "" else config_dict["PLAYLIST_LIMIT"]
     GDL = "Unlimited" if config_dict["GDRIVE_LIMIT"] == "" else config_dict["GDRIVE_LIMIT"]
     TOR = "Unlimited" if config_dict["TORRENT_LIMIT"] == "" else config_dict["TORRENT_LIMIT"]
     CLL = "Unlimited" if config_dict["CLONE_LIMIT"] == "" else config_dict["CLONE_LIMIT"]
@@ -538,6 +542,7 @@ async def send_bot_limits(_, query):
                 f"<code>Torrent   : {TOR}</code> <b>GB</b>\n" \
                 f"<code>G-Drive   : {GDL}</code> <b>GB</b>\n" \
                 f"<code>Yt-Dlp    : {YTD}</code> <b>GB</b>\n" \
+                f"<code>Playlist  : {YTP}</code> <b>NO</b>\n" \
                 f"<code>Direct    : {DIR}</code> <b>GB</b>\n" \
                 f"<code>Clone     : {CLL}</code> <b>GB</b>\n" \
                 f"<code>Rclone    : {RCL}</code> <b>GB</b>\n" \
@@ -547,19 +552,19 @@ async def send_bot_limits(_, query):
                 f"<code>Bot Tasks : {BMT}</code>"
 
     buttons.ibutton(
-        "Bot Stats",
+        "ʙᴏᴛ\nꜱᴛᴀᴛꜱ",
         "show_bot_stats"
     )
     buttons.ibutton(
-        "Sys Stats",
+        "ꜱʏꜱᴛᴇᴍ\nꜱᴛᴀᴛꜱ",
         "show_sys_stats"
     )
     buttons.ibutton(
-        "Repo Stats",
+        "ʀᴇᴘᴏ\nꜱᴛᴀᴛꜱ",
         "show_repo_stats"
     )
     buttons.ibutton(
-        "Close",
+        "ᴄʟᴏꜱᴇ",
         "close_signal"
     )
     sbtns = buttons.build_menu(2)
@@ -583,8 +588,19 @@ bot.add_handler( # type: ignore
     MessageHandler(
         stats,
         filters=command(
-            BotCommands.StatsCommand
+            BotCommands.StatsCommand,
+            case_sensitive=True
         ) & CustomFilters.authorized
+    )
+)
+
+bot.add_handler( # type: ignore
+    MessageHandler(
+        mirror_status,
+        filters=command(
+            BotCommands.StatusCommand,
+            case_sensitive=True
+        ) & CustomFilters.authorized,
     )
 )
 
@@ -630,15 +646,6 @@ bot.add_handler( # type: ignore
         filters=regex(
             "^show_bot_limits"
         )
-    )
-)
-
-bot.add_handler( # type: ignore
-    MessageHandler(
-        mirror_status,
-        filters=command(
-            BotCommands.StatusCommand
-        ) & CustomFilters.authorized,
     )
 )
 
