@@ -16,10 +16,7 @@ from bot import (
     config_dict,
     qbittorrent_client
 )
-from bot.helper.ext_utils.bot_utils import (
-    sync_to_async,
-    new_task
-)
+from bot.helper.ext_utils.bot_utils import sync_to_async
 from bot.helper.ext_utils.status_utils import get_readable_file_size
 from bot.helper.ext_utils.telegraph_helper import telegraph
 from bot.helper.telegram_helper.bot_commands import BotCommands
@@ -199,7 +196,7 @@ async def _search(key, site, message, method):
     )
     buttons = ButtonMaker()
     buttons.ubutton(
-        "🔎 VIEW",
+        "🔎 ᴠɪᴇᴡ\nʀᴇꜱᴜʟᴛꜱ",
         link
     )
     button = buttons.build_menu(1)
@@ -308,13 +305,16 @@ async def _getResult(search_results, key, message, method):
 
 def _api_buttons(user_id, method):
     buttons = ButtonMaker()
-    for data, name in SITES.items(): # type: ignore
+    for (
+        data,
+        name
+    ) in SITES.items(): # type: ignore
         buttons.ibutton(
             name,
             f"torser {user_id} {data} {method}"
         )
     buttons.ibutton(
-        "Cancel",
+        "ᴄᴀɴᴄᴇʟ",
         f"torser {user_id} cancel"
     )
     return buttons.build_menu(2)
@@ -332,11 +332,11 @@ async def _plugin_buttons(user_id):
             f"torser {user_id} {siteName} plugin"
         )
     buttons.ibutton(
-        "All",
+        "ᴀʟʟ\nꜱɪᴛᴇꜱ",
         f"torser {user_id} all plugin"
     )
     buttons.ibutton(
-        "Cancel",
+        "ᴄᴀɴᴄᴇʟ",
         f"torser {user_id} cancel"
     )
     return buttons.build_menu(2)
@@ -362,15 +362,15 @@ async def torrentSearch(_, message):
         )
     elif len(key) == 1:
         buttons.ibutton(
-            "Trending",
+            "ᴛʀᴇɴᴅɪɴɢ",
             f"torser {user_id} apitrend"
         )
         buttons.ibutton(
-            "Recent",
+            "ʀᴇᴄᴇɴᴛ",
             f"torser {user_id} apirecent"
         )
         buttons.ibutton(
-            "Cancel",
+            "ᴄᴀɴᴄᴇʟ",
             f"torser {user_id} cancel"
         )
         button = buttons.build_menu(2)
@@ -384,15 +384,15 @@ async def torrentSearch(_, message):
         and SEARCH_PLUGINS
     ):
         buttons.ibutton(
-            "Api",
+            "ᴀᴘɪ",
             f"torser {user_id} apisearch"
         )
         buttons.ibutton(
-            "Plugins",
+            "ᴘʟᴜɢɪɴꜱ",
             f"torser {user_id} plugin"
         )
         buttons.ibutton(
-            "Cancel",
+            "ᴄᴀɴᴄᴇʟ",
             f"torser {user_id} cancel"
         )
         button = buttons.build_menu(2)
@@ -426,7 +426,6 @@ async def torrentSearch(_, message):
         )
 
 
-@new_task
 async def torrentSearchUpdate(_, query):
     user_id = query.from_user.id
     message = query.message
@@ -515,7 +514,8 @@ bot.add_handler( # type: ignore
     MessageHandler(
         torrentSearch,
         filters=command(
-            BotCommands.SearchCommand
+            BotCommands.SearchCommand,
+            case_sensitive=True
         ) & CustomFilters.authorized,
     )
 )
