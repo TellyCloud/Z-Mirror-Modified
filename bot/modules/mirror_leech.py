@@ -10,11 +10,11 @@ from re import match as re_match
 from bot import (
     bot,
     DOWNLOAD_DIR,
-    LOGGER
+    LOGGER,
+    bot_loop
 )
 from bot.helper.ext_utils.bot_utils import (
     get_content_type,
-    new_task,
     sync_to_async,
     arg_parser,
     COMMAND_USAGE,
@@ -86,7 +86,6 @@ class Mirror(TaskListener):
         self.isLeech = isLeech
         self.file_ = None
 
-    @new_task
     async def newEvent(self):
         self.pmsg = await sendMessage(
             self.message,
@@ -493,42 +492,43 @@ class Mirror(TaskListener):
 
 
 async def mirror(client, message):
-    Mirror(
+    bot_loop.create_task(Mirror(
         client,
         message
-    ).newEvent() # type: ignore
+    ).newEvent()) # type: ignore
 
 
 async def qb_mirror(client, message):
-    Mirror(
+    bot_loop.create_task(Mirror(
         client,
         message,
         isQbit=True
-    ).newEvent() # type: ignore
+    ).newEvent()) # type: ignore
 
 
 async def leech(client, message):
-    Mirror(
+    bot_loop.create_task(Mirror(
         client,
         message,
         isLeech=True
-    ).newEvent() # type: ignore
+    ).newEvent()) # type: ignore
 
 
 async def qb_leech(client, message):
-    Mirror(
+    bot_loop.create_task(Mirror(
         client,
         message,
         isQbit=True,
         isLeech=True
-    ).newEvent() # type: ignore
+    ).newEvent()) # type: ignore
 
 
 bot.add_handler( # type: ignore
     MessageHandler(
         mirror,
         filters=command(
-            BotCommands.MirrorCommand
+            BotCommands.MirrorCommand,
+            case_sensitive=True
         ) & CustomFilters.authorized
     )
 )
@@ -536,7 +536,8 @@ bot.add_handler( # type: ignore
     MessageHandler(
         qb_mirror,
         filters=command(
-            BotCommands.QbMirrorCommand
+            BotCommands.QbMirrorCommand,
+            case_sensitive=True
         ) & CustomFilters.authorized,
     )
 )
@@ -544,7 +545,8 @@ bot.add_handler( # type: ignore
     MessageHandler(
         leech,
         filters=command(
-            BotCommands.LeechCommand
+            BotCommands.LeechCommand,
+            case_sensitive=True
         ) & CustomFilters.authorized
     )
 )
@@ -552,7 +554,8 @@ bot.add_handler( # type: ignore
     MessageHandler(
         qb_leech,
         filters=command(
-            BotCommands.QbLeechCommand
+            BotCommands.QbLeechCommand,
+            case_sensitive=True
         ) & CustomFilters.authorized
     )
 )
